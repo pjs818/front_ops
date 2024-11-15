@@ -2,10 +2,10 @@
 FROM node:16 as build
 
 # 2. 소스코드 
-RUN git clone https://github.com/tong76/front_dev.git
+RUN git clone https://github.com/pjs818/front_ops.git
 
 # 작업 디렉터리 설정
-WORKDIR /front_dev
+WORKDIR /front_ops
 
 # 패키지 설치
 #COPY package*.json ./
@@ -23,7 +23,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Nginx 설정 파일 제거 및 빌드된 파일 복사
-COPY --from=build /front_dev/build /usr/share/nginx/html
+COPY --from=build /front_ops/build /usr/share/nginx/html
 
 # proxy 설정
 COPY nginx.conf /etc/nginx/conf.d/default.conf

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: front_ops
+spec:
+  type: LoadBalancer
+  selector:
+    app: front_ops
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
