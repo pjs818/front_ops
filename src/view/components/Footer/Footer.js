@@ -26,7 +26,7 @@ const Footer = (props) => {
             window.location.pathname === '/payment/paymentwindow' ||
             window.location.pathname === '/payment/ordersummary') {
 
-            axios.post('http://localhost:8080/member/jwtChk', {
+            axios.post('/api/member/jwtChk', {
                 token1: cookie.load('userid'),
                 token2: cookie.load('username')
             })
@@ -34,7 +34,7 @@ const Footer = (props) => {
                     let userid = response.data.token1
                     let password = cookie.load('userpassword')
                     if (password !== undefined) {
-                        axios.post('http://localhost:8080/member/jwtLogin', {
+                        axios.post('/api/member/jwtLogin', {
                             mid: userid,
                             mpw: password
                         })

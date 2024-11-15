@@ -33,11 +33,11 @@ const OrderDetail = () => {
     }
 
     const callMemberInfoApi = () => {
-        axios.post("http://localhost:8080/member/jwtChk", {
+        axios.post("/api/member/jwtChk", {
             token1: cookie.load('userid'),
             token2: cookie.load('username')
         }).then(response => {
-            axios.post("http://localhost:8080/member/jwtLogin", {
+            axios.post("/api/member/jwtLogin", {
                 mid: response.data.token1,
                 mpw: cookie.load("userpassword")
             }).then(response => {
@@ -61,7 +61,7 @@ const OrderDetail = () => {
 
     const callOrderDetailApi = () => {
         // 주문 상세 정보 API 호출
-        axios.post("http://localhost:8080/payment/orderdetail", {
+        axios.post("/api/payment/orderdetail", {
             paymentKey: payment_Key
         })
             .then(response => {
@@ -77,7 +77,7 @@ const OrderDetail = () => {
 
     const callDeliveryInfoApi = () => {
         // 배송지 상세 정보 API 호출
-        axios.post("http://localhost:8080/payment/deliveryinfo", {
+        axios.post("/api/payment/deliveryinfo", {
             paymentKey: payment_Key
         })
             .then(response => {

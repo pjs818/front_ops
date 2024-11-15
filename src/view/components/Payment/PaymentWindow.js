@@ -37,11 +37,11 @@ const PaymentWindow = () => {
     }, [mno])
 
     const callMemberInfoApi = () => {
-        axios.post("http://localhost:8080/member/jwtChk", {
+        axios.post("/api/member/jwtChk", {
             token1: cookie.load('userid'),
             token2: cookie.load('username')
         }).then(response => {
-            axios.post("http://localhost:8080/member/jwtLogin", {
+            axios.post("/api/member/jwtLogin", {
                 mid: response.data.token1,
                 mpw: cookie.load("userpassword")
             }).then(response => {
@@ -59,7 +59,7 @@ const PaymentWindow = () => {
     };
 
     const callPaymentListApiFromDetail = (mno, i) => {
-        axios.post(`http://localhost:8080/bucket/bucketlist`, {
+        axios.post(`/api/bucket/bucketlist`, {
             mno: mno,
             sno: sno,
             pno: pno
@@ -78,7 +78,7 @@ const PaymentWindow = () => {
 
         const selected = selects.split(',').map(Number);
 
-        axios.post(`http://localhost:8080/bucket/bucketlist`, {
+        axios.post(`/api/bucket/bucketlist`, {
             mno: mno,
             selects: selected
         },).then(response => {

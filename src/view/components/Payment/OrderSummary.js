@@ -18,11 +18,11 @@ const OrderSummary = () => {
     }, [mno, menuVisible]);
 
     const callMemberInfoApi = () => {
-        axios.post("http://localhost:8080/member/jwtChk", {
+        axios.post("/api/member/jwtChk", {
             token1: cookie.load('userid'),
             token2: cookie.load('username')
         }).then(response => {
-            axios.post("http://localhost:8080/member/jwtLogin", {
+            axios.post("/api/member/jwtLogin", {
                 mid: response.data.token1,
                 mpw: cookie.load("userpassword")
             }).then(response => {
@@ -35,7 +35,7 @@ const OrderSummary = () => {
 
     const callOrderListApi = () => {
         try {
-            axios.post("http://localhost:8080/payment/ordersummary", {
+            axios.post("/api/payment/ordersummary", {
                 bucketEntity: {
                     mno: mno
                 }
@@ -58,7 +58,7 @@ const OrderSummary = () => {
 
     const deleteOrderSummary = (data) => {
         console.log(data[0].paymentKey);
-        axios.post("http://localhost:8080/payment/deleteordersummary", {
+        axios.post("/api/payment/deleteordersummary", {
             bucketEntity: {
                 mno: mno
             },

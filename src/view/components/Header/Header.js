@@ -43,7 +43,7 @@ const Header = (props) => {
     }, [active]);
 
     const callSessionInfoApi = () => {
-        axios.post('http://localhost:8080/member/jwtChk', {
+        axios.post('/api/member/jwtChk', {
             token1: cookie.load('userid')
             , token2: cookie.load('username')
         })
@@ -77,7 +77,7 @@ const Header = (props) => {
             window.location.pathname === '/payment/paymentwindow' ||
             window.location.pathname === '/payment/ordersummary') {
 
-            axios.post('http://localhost:8080/member/jwtChk', {
+            axios.post('/api/member/jwtChk', {
                 token1: cookie.load('userid'),
                 token2: cookie.load('username')
             })
@@ -85,7 +85,7 @@ const Header = (props) => {
                     let userid = response.data.token1
                     let password = cookie.load('userpassword')
                     if (password !== undefined) {
-                        axios.post('http://localhost:8080/member/jwtLogin', {
+                        axios.post('/api/member/jwtLogin', {
                             mid: userid,
                             mpw: password
                         })
@@ -119,14 +119,14 @@ const Header = (props) => {
     }
 
     const BucketClick = () => {
-        axios.post("http://localhost:8080/member/jwtChk", {
+        axios.post("/api/member/jwtChk", {
             token1: cookie.load('userid'),
             token2: cookie.load('username')
         }).then(response => {
             let userid = response.data.token1
             let password = cookie.load('userpassword')
             if (password !== undefined) {
-                axios.post('http://localhost:8080/member/jwtLogin', {
+                axios.post('/api/member/jwtLogin', {
                     mid: userid,
                     mpw: password
                 }).then(response => {

@@ -17,7 +17,7 @@ const BucketList = () => {
         }
 
         try {
-            axios.post("http://localhost:8080/bucket/increasequan", {
+            axios.post("/api/bucket/increasequan", {
                 mno: mno,
                 pno: pno
             }).then(response => {
@@ -41,7 +41,7 @@ const BucketList = () => {
         }
 
         try {
-            axios.post("http://localhost:8080/bucket/decreasequan", {
+            axios.post("/api/bucket/decreasequan", {
                 mno: mno,
                 pno: pno
             }).then(response => {
@@ -61,7 +61,7 @@ const BucketList = () => {
     const deleteClick = (i, pno) => {
 
         try {
-            axios.post("http://localhost:8080/bucket/deletebucket", {
+            axios.post("/api/bucket/deletebucket", {
                 mno: mno,
                 pno: pno
             }).then(response => {
@@ -95,7 +95,7 @@ const BucketList = () => {
             const products = checkedValues.map((value, index) => value === true ? index : -1).filter(index => index !== -1);
 
             try {
-                axios.post("http://localhost:8080/bucket/deletebuckets", {
+                axios.post("/api/bucket/deletebuckets", {
                     mno: mno,
                     products: products
                 }).then(response => {
@@ -184,11 +184,11 @@ const BucketList = () => {
     }, [mno, isChecked, checkedValues]);
 
     const callMemberInfoApi = () => {
-        axios.post("http://localhost:8080/member/jwtChk", {
+        axios.post("/api/member/jwtChk", {
             token1: cookie.load('userid'),
             token2: cookie.load('username')
         }).then(response => {
-            axios.post("http://localhost:8080/member/jwtLogin", {
+            axios.post("/api/member/jwtLogin", {
                 mid: response.data.token1,
                 mpw: cookie.load("userpassword")
             }).then(response => {
@@ -200,7 +200,7 @@ const BucketList = () => {
     };
 
     const callBucketListApi = (mno, i) => {
-        axios.post(`http://localhost:8080/bucket/bucketlist`, {
+        axios.post(`/api/bucket/bucketlist`, {
             mno: mno
         }).then(response => {
             setAppend_BucketList(BucketList_Append(response.data));

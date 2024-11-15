@@ -24,7 +24,7 @@ const BoardRead = () => {
     const [append_attachList, setAppend_attachList] = useState([]);
 
     const callSessionInfoApi = () => {
-        axios.post('http://localhost:8080/member/jwtChk', {
+        axios.post('/api/member/jwtChk', {
             token1: cookie.load('userid'),
             token2: cookie.load('username')
         })
@@ -44,7 +44,7 @@ const BoardRead = () => {
     useEffect(() => {
         const fetchBoardData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/board/boardPage/${bno}`);
+                const response = await axios.get(`/api/board/boardPage/${bno}`);
                 const data = response.data.boardPage[0];
                 setBoardData(data);
                 if (data.bwriter === userId) {
@@ -60,10 +60,10 @@ const BoardRead = () => {
 
     const boardDelete = async () => {
         try {
-            const res = await axios.post('http://localhost:8080/board/boardDelete', { bno });
+            const res = await axios.post('/api/board/boardDelete', { bno });
             if (res.data === "succ") {
                 const files = append_attachList.map(file => (file.fullName));
-                axios.post(`http://localhost:8080/deleteAllFiles`, {
+                axios.post(`/api/deleteAllFiles`, {
                     files: files
                 })
                     .then(result => {
@@ -84,7 +84,7 @@ const BoardRead = () => {
     };
 
     const callReplyListApi = () => {
-        axios.get(`http://localhost:8080/replyList/${bno}`)
+        axios.get(`/api/replyList/${bno}`)
             .then(response => {
                 setAppend_reply(response.data.replyList);
                 setBoardData(prev => ({ ...prev, bccnt: response.data.replyList.length }));
@@ -95,7 +95,7 @@ const BoardRead = () => {
     };
 
     const callAttachListApi = () => {
-        axios.get(`http://localhost:8080/board/getAttach/${bno}`)
+        axios.get(`/api/board/getAttach/${bno}`)
             .then(response => {
                 for (let i = 0; i < response.data.getAttach.length; i++) {
                     const fileInfo = getFileInfo(response.data.getAttach[i]);
@@ -121,9 +121,9 @@ const BoardRead = () => {
         } else {
             fileName = filePath.substring(filePath.indexOf('_') + 1);
         }
-        const imgSrc = `http://localhost:8080/displayFile?fileName=${filePath}`; // 이미지 URL 생성 함수 호출
+        const imgSrc = `/api/displayFile?fileName=${filePath}`; // 이미지 URL 생성 함수 호출
         const icon = getFileIcon(fileName); // 보여지는 이미지 검사
-        const Link = `http://localhost:8080/displayFile?fileName=${filePath}`; // 파일 다운로드 링크
+        const Link = `/api/displayFile?fileName=${filePath}`; // 파일 다운로드 링크
         const getLink = Link.replace(Link.substring(Link.lastIndexOf('/') + 1, Link.indexOf('_') + 1), "");
         const fullName = filePath; // 전체 경로
 

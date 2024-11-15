@@ -27,11 +27,11 @@ const SuccessPage = () => {
     }, [mno])
 
     const callMemberInfoApi = () => {
-        axios.post("http://localhost:8080/member/jwtChk", {
+        axios.post("/api/member/jwtChk", {
             token1: cookie.load('userid'),
             token2: cookie.load('username')
         }).then(response => {
-            axios.post("http://localhost:8080/member/jwtLogin", {
+            axios.post("/api/member/jwtLogin", {
                 mid: response.data.token1,
                 mpw: cookie.load("userpassword")
             }).then(response => {
@@ -45,7 +45,7 @@ const SuccessPage = () => {
         // TODO: API를 호출해서 서버에게 paymentKey, orderId, amount를 넘겨주세요.
         // 서버에선 해당 데이터를 가지고 승인 API를 호출하면 결제가 완료됩니다.
         // https://docs.tosspayments.com/reference#%EA%B2%B0%EC%A0%9C-%EC%8A%B9%EC%9D%B8
-        const response = await fetch("http://localhost:8080/payment/confirm", {
+        const response = await fetch("/api/payment/confirm", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -65,7 +65,7 @@ const SuccessPage = () => {
             if (status === "DONE") {
                 try {
                     if (selects !== undefined && selects !== null) {
-                        axios.post("http://localhost:8080/payment/paymentprocess", {
+                        axios.post("/api/payment/paymentprocess", {
                             bucketEntity: {
                                 mno: mno,
                                 products: selects.split(",").map(Number)
@@ -74,7 +74,7 @@ const SuccessPage = () => {
                             status: status
                         }).then(response => {
                             if (response.data === "succ") {
-                                axios.post("http://localhost:8080/payment/deliveryregist", {
+                                axios.post("/api/payment/deliveryregist", {
                                     paymentKey: paymentKey,
                                     address: address,
                                     name: name,
@@ -88,7 +88,7 @@ const SuccessPage = () => {
                             }
                         })
                     } else {
-                        axios.post("http://localhost:8080/payment/paymentprocess", {
+                        axios.post("/api/payment/paymentprocess", {
                             bucketEntity: {
                                 mno: mno,
                                 sno: sno,
@@ -98,7 +98,7 @@ const SuccessPage = () => {
                             status: status
                         }).then(response => {
                             if (response.data === "succ") {
-                                axios.post("http://localhost:8080/payment/deliveryregist", {
+                                axios.post("/api/payment/deliveryregist", {
                                     paymentKey: paymentKey,
                                     address: address,
                                     name: name,

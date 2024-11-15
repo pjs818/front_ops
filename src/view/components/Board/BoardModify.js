@@ -22,7 +22,7 @@ const BoardModify = () => {
     // 사용자 아이디 가져오는 코드
     const callSessionInfoApi = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/member/jwtChk', {
+            const response = await axios.post('/api/member/jwtChk', {
                 token1: cookie.load('userid'),
                 token2: cookie.load('username')
             });
@@ -34,7 +34,7 @@ const BoardModify = () => {
 
     // 게시글 첨부파일 가져오는 코드
     const callAttachListApi = () => {
-        axios.get(`http://localhost:8080/board/getAttach/${bno}`)
+        axios.get(`/api/board/getAttach/${bno}`)
             .then(response => {
                 for (let i = 0; i < response.data.getAttach.length; i++) {
                     const fileInfo = getFileInfo(response.data.getAttach[i]);
@@ -68,9 +68,9 @@ const BoardModify = () => {
         } else {
             fileName = filePath.substring(filePath.indexOf('_') + 1);
         }
-        const imgSrc = `http://localhost:8080/displayFile?fileName=${filePath}`; // 이미지 URL 생성 함수 호출
+        const imgSrc = `/api/displayFile?fileName=${filePath}`; // 이미지 URL 생성 함수 호출
         const icon = getFileIcon(fileName); // 보여지는 이미지 검사
-        const Link = `http://localhost:8080/displayFile?fileName=${filePath}`; // 파일 다운로드 링크
+        const Link = `/api/displayFile?fileName=${filePath}`; // 파일 다운로드 링크
         const getLink = Link.replace(Link.substring(Link.lastIndexOf('/') + 1, Link.indexOf('_') + 1), "");
         const fullName = filePath; // 전체 경로
 
@@ -111,7 +111,7 @@ const BoardModify = () => {
     useEffect(() => {
         const callBoardInfoApi = async () => {
             try {
-                const res = await axios.get(`http://localhost:8080/board/boardPage/${bno}`);
+                const res = await axios.get(`/api/board/boardPage/${bno}`);
                 const data = res.data.boardPage[0];
                 setTitle(data.btitle);
                 setContent(data.bcon);
@@ -163,7 +163,7 @@ const BoardModify = () => {
             };
 
             try {
-                const response = await axios.post('http://localhost:8080/board/boardModify', jsonData);
+                const response = await axios.post('/api/board/boardModify', jsonData);
                 if (response.data === "succ") {
                     sweetalert('수정이 완료되었습니다.', '', 'success', '확인');
                     // 백업 데이터에 없는 값을 지우는 작업(디렉토리에 쓸데없는 공간 차지 방지)
@@ -171,7 +171,7 @@ const BoardModify = () => {
                         .filter(file => !files.includes(file.fullName))
                         .map(file => file.fullName);
                     try {
-                        axios.post("http://localhost:8080/deleteAllFiles", {
+                        axios.post("/api/deleteAllFiles", {
                             files: deletefile
                         }).then(response => {
                             if (response.data !== "deleted") {
@@ -212,7 +212,7 @@ const BoardModify = () => {
             const formData = new FormData();
             formData.append("file", file);
 
-            axios.post('http://localhost:8080/uploadAjax', formData, {
+            axios.post('/api/uploadAjax', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -237,7 +237,7 @@ const BoardModify = () => {
 
     /* const handleDeleteAll = () => {
         const files = append_attachList.map(file => (file.fullName));
-        axios.post(`http://localhost:8080/deleteAllFiles`, {
+        axios.post(`/api/deleteAllFiles`, {
             files: files
         })
             .then(result => {

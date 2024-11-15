@@ -21,7 +21,7 @@ const BoardList = () => {
     // 게시판 리스트 불러오기
     const fetchBoardList = (page, searchParams = {}) => {
         const { keyword, searchtype } = searchParams;
-        let url = `http://localhost:8080/board/list/${page}`;
+        let url = `/api/board/list/${page}`;
         
         if (searchtype && keyword) {
             url += `?searchType=${searchtype}&keyword=${keyword}`;
