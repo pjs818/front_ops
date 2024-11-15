@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import MapComponent from './MapComponent';
 
 const PopupRead = () => {
     const { sno } = useParams(); // useParams를 통해 URL 파라미터를 가져옵니다.
@@ -18,7 +17,7 @@ const PopupRead = () => {
     useEffect(() => {
         const fetchPopupData = async () => {
             try {
-                const response = await axios.get(`/api/popup/popupRead/${sno}`);
+                const response = await axios.get(`http://localhost:8080/popup/popupRead/${sno}`);
                 const data = response.data.popupRead[0];
                 setPopupData({
                     sname: data.sname,
@@ -35,7 +34,6 @@ const PopupRead = () => {
         };
         fetchPopupData();
     }, [sno]); // sno가 변경될 때마다 이 useEffect가 호출됩니다.
-    
 
     return (
         <main id="main">
@@ -92,8 +90,7 @@ const PopupRead = () => {
                                             <div className="row">
                                                 <div className="col-sm-12">
                                                     <div className="title-box-d section-t4">
-                                                        <h3 className="title-d">운영시간</h3>
-                                                        <p><strong>{popupData.splc}</strong></p>
+                                                        <h3 className="title-d">운영시간</h3>                                                       
                                                     </div>
                                                 </div>
                                             </div>
@@ -114,7 +111,7 @@ const PopupRead = () => {
                                 <div className="col-md-7 col-lg-7 section-md-t3">
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="title-box-d">
+                                            <div className="title-box-d section-t4">
                                                 <h3 className="title-d">상세내용</h3>
                                             </div>
                                         </div>
@@ -145,12 +142,11 @@ const PopupRead = () => {
                                     </li>
                                 </ul>
                                 <div className="tab-content" id="pills-tabContent">
-                                    {/* <iframe
+                                    <iframe
                                         src={popupData.smap}
                                         width="100%" height="450" style={{border: "0"}} allowFullScreen=""
-                                        loading="lazy" referrerPolicy="no-referrer-when-downgrade">
-                                    </iframe> */}
-                                    <MapComponent location={popupData.splc} />
+                                        loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+                                    ></iframe>
                                 </div>
                             </div>
                         </div>
