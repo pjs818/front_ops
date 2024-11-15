@@ -102,11 +102,11 @@ const GoodsDetail = () => {
     const callMemberInfoApi = () => {
 
         if (currentMno !== mno || currentMno === "") {
-            axios.post("api/member/jwtChk", {
+            axios.post("/api/member/jwtChk", {
                 token1: cookie.load('userid'),
                 token2: cookie.load('username')
             }).then(response => {
-                axios.post("api/member/jwtLogin", {
+                axios.post("/api/member/jwtLogin", {
                     mid: response.data.token1,
                     mpw: cookie.load("userpassword")
                 }).then(response => {
@@ -122,7 +122,7 @@ const GoodsDetail = () => {
     }
 
     const callGoodsDetailApi = () => {
-        axios.get(`api/goods/goodsdetail/${sno}/${pno}`, {
+        axios.get(`/api/goods/goodsdetail/${sno}/${pno}`, {
         }).then(response => {
             try {
                 setAppend_GoodsDetail(GoodsDetail_Append(response.data));
@@ -210,7 +210,7 @@ const GoodsDetail = () => {
         const updateBucketList = async () => {
 
             try {
-                const response = await axios.post("api/bucket/chkbucket", {
+                const response = await axios.post("/api/bucket/chkbucket", {
                     mno: mno,
                     pno: pno
                 });
@@ -228,7 +228,7 @@ const GoodsDetail = () => {
 
         if (await updateBucketList()) {
             try {
-                const response = await fetch("api/bucket/updatebucket", {
+                const response = await fetch("/api/bucket/updatebucket", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -251,7 +251,7 @@ const GoodsDetail = () => {
             }
         } else {
             try {
-                const response = await fetch("api/bucket/addbucket", {
+                const response = await fetch("/api/bucket/addbucket", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -291,7 +291,7 @@ const GoodsDetail = () => {
             }
 
             try {
-                const response = await axios.post("api/bucket/chkbucket", {
+                const response = await axios.post("/api/bucket/chkbucket", {
                     mno: mno,
                     pno: pno
                 });
@@ -323,7 +323,7 @@ const GoodsDetail = () => {
         if (await fnvaildate()) {
 
             try {
-                const response = await fetch("api/bucket/addbucket", {
+                const response = await fetch("/api/bucket/addbucket", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -350,7 +350,7 @@ const GoodsDetail = () => {
     }
 
     const callReviewListApi = () => {
-        axios.get(`api/goods/reviewlist/${pno}`, {
+        axios.get(`/api/goods/reviewlist/${pno}`, {
         }).then(response => {
             try {
                 setAppend_review(reviewList_append(response.data));
@@ -478,7 +478,7 @@ const GoodsDetail = () => {
         Json_form = "{\"" + Json_form.replace(/\&/g, '\",\"').replace(/=/gi, '\":"') + "\"}";
 
         try {
-            const response = await fetch(`api/goods/modifyreview/${rno}`, {
+            const response = await fetch(`/api/goods/modifyreview/${rno}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -510,7 +510,7 @@ const GoodsDetail = () => {
 
         if (confirm.isConfirmed) {
             try {
-                const response = await fetch(`api/goods/deletereview/${rno}`, {
+                const response = await fetch(`/api/goods/deletereview/${rno}`, {
                     method: 'POST'
                 });
                 const body = await response.text();
@@ -551,7 +551,7 @@ const GoodsDetail = () => {
             Json_form = "{\"" + Json_form.replace(/\&/g, '\",\"').replace(/=/gi, '\":"') + "\"}";
 
             try {
-                const response = await fetch('api/goods/writereview', {
+                const response = await fetch('/api/goods/writereview', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
