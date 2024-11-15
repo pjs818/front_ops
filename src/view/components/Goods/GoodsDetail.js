@@ -432,8 +432,7 @@ const GoodsDetail = () => {
 
         const date = new Date(rdate);
 
-        // UTC 시간을 기준으로 9시간 더해줍니다.
-        const koreaTime = new Date(date.getTime() + (9 * 60 * 60 * 1000)); // 9시간을 밀리초로 더하기
+        const koreaTime = new Date(date.getTime());
 
         // 원하는 형식으로 변환 (YYYY-MM-DD HH:mm)
         return koreaTime.toLocaleString('sv-SE', {
