@@ -9,8 +9,8 @@ pipeline {
     stage('docker build and push') {
       steps {
         sh '''
-        docker build --no-cache -t 192.168.1.10:8443/front_ops .
-        docker push 192.168.1.10:8443/front_ops
+        docker build --no-cache -t 192.168.1.10:8443/front-ops .
+        docker push 192.168.1.10:8443/front-ops
         '''
       }
     }

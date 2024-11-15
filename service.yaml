@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: front_ops
+  name: front-ops
 spec:
   type: LoadBalancer
   selector:
-    app: front_ops
+    app: front-ops
   ports:
     - protocol: TCP
       port: 80
