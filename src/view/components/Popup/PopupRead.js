@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 
 const PopupRead = () => {
     const { sno } = useParams(); // useParams를 통해 URL 파라미터를 가져옵니다.
-    
+
     const [popupData, setPopupData] = useState({
         sname: '',
         scon: '',
@@ -63,7 +63,7 @@ const PopupRead = () => {
             <section className="property-single nav-arrow-b">
                 <div className="container">
                     <div className="row justify-content-center">
-                        <div className="col-lg-8">
+                        <div className="col-lg-8" style={{ textAlign: "center" }}>
                             <div id="property-single-carousel" className="swiper">
                                 <div className="swiper-wrapper">
                                     <div className="carousel-item-b swiper-slide">
@@ -86,12 +86,13 @@ const PopupRead = () => {
                                         <div className="card-header-c d-flex">
                                             <div className="card-title-c align-self-center"></div>
                                         </div>
-                                        <div className="property-summary">
+                                        <div className="property-summary" style={{ marginLeft: "70px" }}>
                                             <div className="row">
                                                 <div className="col-sm-12">
                                                     <div className="title-box-d section-t4">
-                                                        <h3 className="title-d">운영시간</h3>                                                       
+                                                        <h3 className="title-d">장소&운영시간</h3>
                                                     </div>
+                                                    <p className="d-flex justify-content-between"><strong>장소: </strong><span>{popupData.splc}</span></p>
                                                 </div>
                                             </div>
                                             <div className="summary-list">
@@ -108,10 +109,15 @@ const PopupRead = () => {
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="col-sm-12">
+                            <div className="row justify-content-between" style={{ margin: "120px" }}>
                                 <div className="col-md-7 col-lg-7 section-md-t3">
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <div className="title-box-d section-t4">
+                                            <div className="title-box-d">
                                                 <h3 className="title-d">상세내용</h3>
                                             </div>
                                         </div>
@@ -144,7 +150,7 @@ const PopupRead = () => {
                                 <div className="tab-content" id="pills-tabContent">
                                     <iframe
                                         src={popupData.smap}
-                                        width="100%" height="450" style={{border: "0"}} allowFullScreen=""
+                                        width="100%" height="450" style={{ border: "0" }} allowFullScreen=""
                                         loading="lazy" referrerPolicy="no-referrer-when-downgrade"
                                     ></iframe>
                                 </div>
@@ -158,4 +164,3 @@ const PopupRead = () => {
 };
 
 export default PopupRead;
-   

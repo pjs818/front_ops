@@ -105,22 +105,25 @@ const Comments = ({ bno, userId, callReplyListApi, replies }) => {
 
     return (
         <div className="comments-section">
-            <textarea
-                placeholder="댓글을 작성하세요..."
-                rows="4"
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                style={{ borderRadius: '5px', padding: '10px', marginBottom: '10px', width: '100%' }}
-            />
-            <div style={{ backgroundColor: "#2eca6a", padding: "10px", textAlign: "center", cursor: 'pointer' }} onClick={submitClick}>
-                댓글작성
+            {/* 댓글 작성란의 스타일을 수정 */}
+            <div style={{ width: '50%', margin: '0 auto' }}>
+                <textarea
+                    placeholder="댓글을 작성하세요..."
+                    rows="4"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    style={{ borderRadius: '5px', padding: '10px', marginBottom: '10px', width: '100%' }}
+                />
+                <div style={{ backgroundColor: "#2eca6a", padding: "10px", textAlign: "center", cursor: 'pointer' }} onClick={submitClick}>
+                    댓글작성
+                </div>
+                <ul className="timeline">
+                    <li className="time-label">
+                        <strong>댓글목록</strong>
+                        <small>댓글 수: {replies.length}</small>
+                    </li>
+                </ul>
             </div>
-            <ul className="timeline">
-                <li className="time-label">
-                    <strong>댓글목록</strong>
-                    <small>댓글 수: {replies.length}</small>
-                </li>
-            </ul>
             <ul>
                 {replyListAppend}
             </ul>
