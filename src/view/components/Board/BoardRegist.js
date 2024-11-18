@@ -13,7 +13,7 @@ const BoardRegist = () => {
     const [append_attachList, setAppend_attachList] = useState([]);
 
     useEffect(() => {
-        
+
         const cookie_userid = cookie.load('userid');
         const cookie_usernm = cookie.load('username');
         const cookie_password = cookie.load('userpassword');
@@ -31,7 +31,7 @@ const BoardRegist = () => {
             $("#main").hide();
         }
         callSessionInfoApi();
-        
+
     }, [append_attachList]);
 
     const callSessionInfoApi = () => {
@@ -177,6 +177,10 @@ const BoardRegist = () => {
         event.preventDefault();
     };
 
+    const handleFileSelect = (event) => {
+        handleDrop(event);  // 파일 선택 시 drop 핸들러 호출
+    };
+
     const handleDelete = (fullName) => {
         axios.post("/api/deleteFile", {
             fileName: fullName
@@ -233,7 +237,7 @@ const BoardRegist = () => {
                                         </div>
                                         <div className="form-group">
                                             <input type="text" name="btitle" className="form-control form-control-lg form-control-a"
-                                            placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                                                placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
                                         </div>
                                         <div className="col-md-12">
                                             <div className="form-group">
@@ -248,6 +252,22 @@ const BoardRegist = () => {
                                                 onDrop={handleDrop}
                                                 onDragOver={handleDragOver}>
                                             </div>
+
+                                            {/* 파일 탐색기 버튼 */}
+                                            <input
+                                                type="file"
+                                                className="file-input"
+                                                onChange={handleFileSelect}
+                                                style={{ display: 'none' }} // 스타일로 숨김 처리
+                                                id="fileInput"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => document.getElementById('fileInput').click()}  // 버튼 클릭 시 파일 탐색기 열기
+                                            >
+                                                Select File
+                                            </button>
+
                                         </div>
 
                                         <div className="attach-footer">
