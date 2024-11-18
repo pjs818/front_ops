@@ -5,11 +5,12 @@
 
 /* class로 지정했을 때는 공통으로 관리할 때  */
 .intro-title span {
-    font-family: 'Anton', 'Black Han Sans', sans-serif;
-    font-weight: normal;
-    font-size: 65px;
-    color: white;
+    font-family: 'Anton', 'Black Han Sans', sans-serif !important;
+    font-weight: normal !important;
+    font-size: 65px !important;
+    color: white !important;
 }
+
 
 .price-a strong {
     color: white;
