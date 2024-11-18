@@ -17,7 +17,7 @@ const PopupRead = () => {
     useEffect(() => {
         const fetchPopupData = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/popup/popupRead/${sno}`);
+                const response = await axios.get(`/api/popup/popupRead/${sno}`);
                 const data = response.data.popupRead[0];
                 setPopupData({
                     sname: data.sname,
@@ -150,13 +150,6 @@ const PopupRead = () => {
                                 </div>
                             </div>
                         </div>
-                        {/*
-                        <div>
-                             예약하기 구현 할것 
-                            <Link><button>예약하기</button></Link>
-                            
-                        </div>
-                        */}
                     </div>
                 </div>
             </section>

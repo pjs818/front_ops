@@ -20,7 +20,7 @@ const MainView = () => {
 
     const callGoodsListApi = () => {
 
-        axios.get("http://localhost:8080/goods/goodslist/")
+        axios.get("/api/goods/goodslist/")
 
             .then(response => {
 

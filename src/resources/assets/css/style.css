@@ -46,10 +46,19 @@
 	transform: rotate(45deg);
 }
 
-
 /* /======================================================
                      버튼 style.css
 ======================================================/ */
+
+  
+  /* 마우스 hover 시 색상 변경 */
+  .title-part1:hover,
+  .title-part2:hover {
+	color: white; /* 원하는 색상으로 변경 (예: 토마토 색상) */
+	transition: color 0.3s ease; /* 부드러운 전환 효과 */
+  }
+  
+
 .green-button {
 	background: #2eca6a;
 	height: 40px;
@@ -1139,7 +1148,7 @@ input[name="keyword"] {
 }
 
 /* 변경 */
-.mcard-overlay {
+.m{
 	position: relative;
 	width: 100%;
 	height: 42%;
@@ -2016,7 +2025,7 @@ a:hover {
 
 .navbar-default .dropdown .dropdown-menu .dropdown-item:hover {
 	background-color: #ffffff;
-	color: #2eca6a;
+	color: white;
 	transition: all 500ms ease;
 }
 
@@ -2442,7 +2451,7 @@ a:hover {
 
 @media (min-width : 768px) {
 
-	.card-box-a:hover .img-a,
+	.card-box-a .img-a,
 	.card-box-a:hover .img-b,
 	.card-box-b:hover .img-a,
 	.card-box-b:hover .img-b {
@@ -2494,13 +2503,14 @@ a:hover {
 /*======================================
 //--//-->   PROPERTY - CARD-A
 ======================================*/
-@media (min-width : 768px) {
+/* @media (min-width : 768px) {
 	.card-box-a:hover .card-overlay-a-content {
 		bottom: 60px;
 	}
 }
 
 @media (min-width : 768px) and (min-width: 768px) {
+	
 	.card-box-a:hover .card-overlay-a-content {
 		bottom: 60px;
 	}
@@ -2526,7 +2536,7 @@ a:hover {
 	.card-box-a .card-body-a {
 		padding-bottom: 1rem;
 	}
-}
+} */
 
 .card-overlay-a-content {
 	transition: all 0.5s ease-in;
@@ -2588,11 +2598,22 @@ a:hover {
 .price-a {
 	color: #ffffff;
 	padding: 0.6rem 0.8rem;
-	border: 2px solid #2eca6a;
+	border: 2px solid white;
 	border-radius: 50px;
 	text-transform: uppercase;
 	letter-spacing: 0.03em;
 }
+
+.price-d {
+	color: #ffffff;
+	padding: 0.8rem 1.0rem; /* 패딩을 더 크게 조정 */
+	border: 3px solid black; /* 테두리 두께를 키움 */
+	border-radius: 50px;
+	text-transform: uppercase;
+	letter-spacing: 0.05em; /* 글자 간격도 조금 넓힘 */
+	font-size: 0.8rem; /* 글씨 크기 증가 */
+	background-color: rgba(0, 0, 0, 0.6); /* 약간 투명한 검은색 배경 (0.6은 투명도) */
+  }
 
 .card-footer-a {
 	width: 100%;
