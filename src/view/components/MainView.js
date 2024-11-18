@@ -20,7 +20,6 @@ const MainView = () => {
 
     const callGoodsListApi = () => {
 
-        // 테스트
         axios.get("/api/goods/goodslist/")
 
             .then(response => {
