@@ -133,13 +133,22 @@ const BoardRegist = () => {
         const imgSrc = `/api/displayFile?fileName=${filePath.replace("s_", "", 1)}`;
         const icon = getFileIcon(fileName);
         const Link = `/api/displayFile?fileName=${filePath}`;
+        const getLink = Link.replace(Link.substring(Link.lastIndexOf('/') + 1, Link.indexOf('_') + 1), "");
         const fullName = filePath;
+
+        console.log(fileName);
+        console.log(imgSrc);
+        console.log(icon);
+        console.log(Link);
+        console.log(getLink);
+        console.log(fullName);
 
         return {
             fileName,
             imgSrc,
             icon,
             Link,
+            getLink,
             fullName,
         };
     };
@@ -251,23 +260,39 @@ const BoardRegist = () => {
                                                     <li key={index}>
                                                         <span className="mailbox-attachment-icon has-img">
                                                             {file.icon ? (
+                                                                /* 이미지 파일이 아닌경우 */
                                                                 <a href={file.Link}>
                                                                     <img src={file.icon} alt="Attachment Icon" style={{ width: "100px", height: "100px" }} />
                                                                 </a>
                                                             ) : (
-                                                                <a href={file.Link} target="blank">
+                                                                <a href={file.getLink} target="blank">
                                                                     <img src={file.imgSrc} alt="Attachment" />
                                                                 </a>
                                                             )}
                                                         </span>
                                                         <div className="mailbox-attachment-info">
-                                                            <a href={file.Link} className="mailbox-attachment-name">{file.fileName}</a>
-                                                            <a href="#" onClick={(e) => {
-                                                                e.preventDefault();
-                                                                handleDelete(file.fullName);
-                                                            }} className="btn btn-default btn-xs pull-right delbtn">
-                                                                <i className="fa fa-fw fa-remove"><span>X</span></i>
-                                                            </a>
+                                                            {file.icon ? (
+                                                                <>
+                                                                    {/* 이미지 파일이 아닌경우 */}
+                                                                    <a href={file.Link} className="mailbox-attachment-name">{file.fileName}</a>
+                                                                    <a href={file.fullName} onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        handleDelete(file.fullName);
+                                                                    }} className="btn btn-default btn-xs pull-right delbtn">
+                                                                        <i className="fa fa-fw fa-remove"><span>X</span></i>
+                                                                    </a>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <a href={file.getLink} target="blank" className="mailbox-attachment-name">{file.fileName}</a>
+                                                                    <a href={file.fullName} onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        handleDelete(file.fullName);
+                                                                    }} className="btn btn-default btn-xs pull-right delbtn">
+                                                                        <i className="fa fa-fw fa-remove"><span>X</span></i>
+                                                                    </a>
+                                                                </>
+                                                            )}
                                                         </div>
                                                     </li>
                                                 ))}
