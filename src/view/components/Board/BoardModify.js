@@ -64,7 +64,8 @@ const BoardModify = () => {
             fileType === "png" ||
             fileType === "gif"
         ) {
-            fileName = filePath.substring(filePath.lastIndexOf('_') + 1);
+            const lastPart = filePath.substring(filePath.lastIndexOf('/') + 1);
+            fileName = lastPart.substring(lastPart.indexOf('_', 2) + 1);
         } else {
             fileName = filePath.substring(filePath.indexOf('_') + 1);
         }
