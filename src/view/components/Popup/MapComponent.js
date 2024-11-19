@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { GoogleMap, LoadScript, Marker, DirectionsRenderer, InfoWindow, useJsApiLoader } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  DirectionsRenderer,
+  InfoWindow,
+  useJsApiLoader,
+} from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
@@ -7,21 +14,22 @@ const containerStyle = {
 };
 
 const MapComponent = ({ location }) => {
+  // 상태 정의
   const [currentLocation, setCurrentLocation] = useState(null); // 현재 위치
-  const [directions, setDirections] = useState(null); // 경로 상태
-  const [loading, setLoading] = useState(false); // 경로 로딩 상태
-  const [routeDetails, setRouteDetails] = useState({ distance: "", duration: "" }); // 거리, 시간 정보
-  const [infoWindowPosition, setInfoWindowPosition] = useState(null); // 정보창 위치 상태
+  const [directions, setDirections] = useState(null); // 경로 정보
+  const [loading, setLoading] = useState(false); // 로딩 상태
+  const [routeDetails, setRouteDetails] = useState({ distance: "", duration: "" }); // 거리 및 시간
+  const [infoWindowPosition, setInfoWindowPosition] = useState(null); // 정보창 위치
   const [infoWindowVisible, setInfoWindowVisible] = useState(false); // 정보창 표시 여부
-  const [destination, setDestination] = useState(null); // 목적지 좌표 (기본값 없음)
+  const [destination, setDestination] = useState(null); // 목적지
 
-  // Google Maps API와 Geocoding 서비스 로드
+  // Google Maps API 및 Geocoding 라이브러리 로드
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
-    libraries: ["places"], // Geocoding을 사용하려면 "places" 라이브러리도 추가해야 합니다.
+    libraries: ["places"], // Geocoding을 위해 places 라이브러리 추가
   });
 
-  // 사용자의 현재 위치를 가져오는 함수
+  // 사용자의 현재 위치 가져오기
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -30,27 +38,22 @@ const MapComponent = ({ location }) => {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
-          setCurrentLocation(userLocation); // 위치 업데이트
+          setCurrentLocation(userLocation); // 현재 위치 설정
         },
-        (error) => {
-          console.error("Error getting location:", error);
-        }
+        (error) => console.error("위치 오류:", error)
       );
     }
   }, []);
 
-  // Geocoding API를 사용하여 특정 건물 이름에 대한 좌표를 자동으로 가져오는 함수
+  // Geocoding을 통해 주소로부터 좌표 가져오기
   const getGeocode = (address) => {
     if (window.google && window.google.maps) {
       const geocoder = new window.google.maps.Geocoder();
 
-      geocoder.geocode({ address: address }, (results, status) => {
-        if (status === "OK") {
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === "OK" && results[0]) {
           const location = results[0].geometry.location;
-          setDestination({
-            lat: location.lat(),
-            lng: location.lng(),
-          });
+          setDestination({ lat: location.lat(), lng: location.lng() }); // 목적지 좌표 설정
         } else {
           alert("건물 이름을 찾을 수 없습니다.");
         }
@@ -58,45 +61,44 @@ const MapComponent = ({ location }) => {
     }
   };
 
-  // Directions API를 사용하여 대중교통 경로를 요청하는 함수
+  // Directions API를 사용하여 경로 찾기
   const getDirections = (origin, destination) => {
-    setLoading(true); // 경로 요청 시 로딩 상태 설정
+    setLoading(true); // 경로 요청 시 로딩 상태 활성화
 
-    // DirectionsService가 로드되었는지 확인하고 사용
     if (window.google && window.google.maps) {
       const directionsService = new window.google.maps.DirectionsService();
 
       directionsService.route(
         {
-          origin: origin,
-          destination: destination,
+          origin,
+          destination,
           travelMode: window.google.maps.TravelMode.TRANSIT, // 대중교통 경로
         },
         (result, status) => {
           setLoading(false); // 경로 요청 후 로딩 종료
           if (status === window.google.maps.DirectionsStatus.OK) {
-            setDirections(result); // 경로가 정상적으로 반환되면 결과 저장
+            setDirections(result); // 경로 결과 설정
           } else {
-            console.error("Error fetching directions:", status);
+            console.error("경로 찾기 실패:", status);
             alert("경로를 찾을 수 없습니다.");
           }
         }
       );
     } else {
-      console.error("Google Maps API is not loaded yet");
+      console.error("Google Maps API가 로드되지 않았습니다.");
     }
   };
 
-  // 위치와 목적지가 업데이트될 때마다 경로를 자동으로 요청
+  // 위치 및 목적지가 변경될 때마다 경로 요청
   useEffect(() => {
     if (currentLocation && destination) {
-      getDirections(currentLocation, destination); // 출발지와 목적지 모두 설정되었을 때 경로 요청
+      getDirections(currentLocation, destination); // 출발지와 목적지가 모두 설정되었을 때 경로 요청
     }
-  }, [currentLocation, destination]); // currentLocation 또는 destination이 변경될 때마다 경로 요청
+  }, [currentLocation, destination]);
 
-  // 경로 클릭 시 거리와 시간을 추출하여 업데이트
+  // 경로 클릭 시 거리와 시간 정보 업데이트
   const handleRouteClick = (event) => {
-    if (directions && directions.routes && directions.routes[0] && directions.routes[0].legs[0]) {
+    if (directions?.routes[0]?.legs[0]) {
       const route = directions.routes[0].legs[0];
       setRouteDetails({
         distance: route.distance.text,
@@ -107,26 +109,43 @@ const MapComponent = ({ location }) => {
     }
   };
 
-  // `useEffect`를 사용해 건물 이름 입력에 따른 목적지 위치를 자동으로 찾기
+  // `location` props가 변경될 때마다 목적지 좌표 자동 설정
   useEffect(() => {
     if (isLoaded && location && destination === null) {
-      getGeocode(location); // 부모에서 받은 location 값으로 좌표를 구함
+      getGeocode(location); // 부모 컴포넌트에서 받은 주소로 좌표 찾기
     }
-  }, [isLoaded, location, destination]); // location 값이 변경될 때마다 경로를 다시 찾도록
+  }, [isLoaded, location, destination]);
 
+  // 로딩 중일 때의 표시
+  const renderLoadingMessage = () => (
+    <div
+      style={{
+        position: "absolute",
+        top: "20px",
+        left: "20px",
+        background: "rgba(255, 255, 255, 0.7)",
+        padding: "10px",
+        borderRadius: "5px",
+      }}
+    >
+      경로를 찾는 중...
+    </div>
+  );
+
+  // 맵을 로드할 수 있을 때 렌더링
   return isLoaded ? (
     <>
       <GoogleMap
         mapContainerStyle={containerStyle}
-        center={currentLocation || { lat: 37.5665, lng: 126.978 }} // 기본 위치 서울(위도, 경도)로 설정
+        center={currentLocation || { lat: 37.5665, lng: 126.978 }} // 기본 위치 서울
         zoom={14}
         onClick={handleRouteClick} // 경로 클릭 시 호출되는 이벤트 핸들러
-        language="ko" // 구글 맵 UI 언어를 한글로 설정
+        language="ko" // 맵 UI 언어를 한국어로 설정
       >
         {/* 사용자 위치 마커 */}
         {currentLocation && <Marker position={currentLocation} label="내 위치" />}
 
-        {/* 목적지 마커 (동적으로 설정된 목적지) */}
+        {/* 목적지 마커 */}
         {destination && <Marker position={destination} label="목적지" />}
 
         {/* 경로 렌더링 */}
@@ -140,23 +159,10 @@ const MapComponent = ({ location }) => {
           />
         )}
 
-        {/* 경로 로딩 중이면 로딩 메시지 */}
-        {loading && (
-          <div
-            style={{
-              position: "absolute",
-              top: "20px",
-              left: "20px",
-              background: "rgba(255, 255, 255, 0.7)",
-              padding: "10px",
-              borderRadius: "5px",
-            }}
-          >
-            경로를 찾는 중...
-          </div>
-        )}
+        {/* 경로 로딩 중 */}
+        {loading && renderLoadingMessage()}
 
-        {/* InfoWindow로 거리와 시간 표시 */}
+        {/* 정보창 표시 */}
         {infoWindowVisible && (
           <InfoWindow
             position={infoWindowPosition}
@@ -172,7 +178,7 @@ const MapComponent = ({ location }) => {
       </GoogleMap>
     </>
   ) : (
-    <div>Loading...</div>
+    <div>Loading...</div> // 맵 로딩 중
   );
 };
 
