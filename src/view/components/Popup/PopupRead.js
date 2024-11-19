@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
+import MapComponent from './MapComponent';
 
 const PopupRead = () => {
     const { sno } = useParams(); // useParams를 통해 URL 파라미터를 가져옵니다.
@@ -13,6 +14,7 @@ const PopupRead = () => {
         smedia: '',
         smap: ''
     });
+    const [plc, setPlc] = useState('');
 
     useEffect(() => {
         const fetchPopupData = async () => {
@@ -27,6 +29,7 @@ const PopupRead = () => {
                     smedia: data.smedia,
                     smap: data.smap
                 });
+                setPlc(data.smap);
             } catch (error) {
                 console.error(error);
                 alert('axios 에러');
@@ -148,11 +151,7 @@ const PopupRead = () => {
                                     </li>
                                 </ul>
                                 <div className="tab-content" id="pills-tabContent">
-                                    <iframe
-                                        src={popupData.smap}
-                                        width="100%" height="450" style={{ border: "0" }} allowFullScreen=""
-                                        loading="lazy" referrerPolicy="no-referrer-when-downgrade"
-                                    ></iframe>
+                                    <MapComponent location={plc} />
                                 </div>
                             </div>
                         </div>
