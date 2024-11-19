@@ -100,7 +100,7 @@ const BoardRegist = () => {
                 const formData = new FormData();
                 formData.append("file", file); // 한 번에 하나씩 업로드
 
-                axios.post('http://localhost:8080/uploadAjax', formData, {
+                axios.post('/api/uploadAjax', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
