@@ -118,7 +118,17 @@ const BoardRegist = () => {
 
     const getFileInfo = (data) => {
         const filePath = data;
-        const fileName = filePath.split('/').pop();
+        let fileName;
+        const fileType = filePath.split('.').pop().toLowerCase();
+        if (fileType === "jpg" ||
+            fileType === "jpeg" ||
+            fileType === "png" ||
+            fileType === "gif"
+        ) {
+            fileName = filePath.substring(filePath.indexOf('_', 2) + 1);
+        } else {
+            fileName = filePath.substring(filePath.indexOf('_') + 1);
+        }
         const imgSrc = `/api/displayFile?fileName=${filePath}`;
         const icon = getFileIcon(fileName);
         const Link = `/api/displayFile?fileName=${filePath}`;
