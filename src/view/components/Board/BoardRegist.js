@@ -130,7 +130,7 @@ const BoardRegist = () => {
         } else {
             fileName = filePath.substring(filePath.indexOf('_') + 1);
         }
-        const imgSrc = `/api/displayFile?fileName=${filePath}`;
+        const imgSrc = `/api/displayFile?fileName=${filePath.replace("s_", "", 1)}`;
         const icon = getFileIcon(fileName);
         const Link = `/api/displayFile?fileName=${filePath}`;
         const fullName = filePath;

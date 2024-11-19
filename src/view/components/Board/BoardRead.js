@@ -122,7 +122,7 @@ const BoardRead = () => {
         } else {
             fileName = filePath.substring(filePath.indexOf('_') + 1);
         }
-        const imgSrc = `/api/displayFile?fileName=${filePath}`; // 이미지 URL 생성 함수 호출
+        const imgSrc = `/api/displayFile?fileName=${filePath.replace("s_", "", 1)}`; // 이미지 URL 생성 함수 호출
         const icon = getFileIcon(fileName); // 보여지는 이미지 검사
         const Link = `/api/displayFile?fileName=${filePath}`; // 파일 다운로드 링크
         const getLink = Link.replace(Link.substring(Link.lastIndexOf('/') + 1, Link.indexOf('_') + 1), "");
