@@ -78,31 +78,28 @@ export default function RemoveInfo() {
                 const isConfirmed = window.confirm("정말로 탈퇴하시겠습니까?");
 
                 if (isConfirmed) {
-                    const really = window.confirm("정말로? 😢");
-
-                    if (really) {
-                        try {
-                            // 탈퇴 요청을 보내는 API 호출
-                            const response = await axios.post("/api/deleteinfo", {
-                                mno: mno,
-                                mpw: password
-                            }, {
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                }
-                            });
-
-                            if (response.status === 200) {
-                                alert("회원탈퇴가 완료되었습니다.");
-                                window.location.href = "/"; // 탈퇴 후 홈으로 리다이렉트
+                    try {
+                        // 탈퇴 요청을 보내는 API 호출
+                        const response = await axios.post("/api/deleteinfo", {
+                            mno: mno,
+                            mpw: password
+                        }, {
+                            headers: {
+                                'Content-Type': 'application/json'
                             }
-                        } catch (error) {
+                        });
 
-                            alert("탈퇴 처리 중 오류가 발생했습니다.");
-                            console.error("오류 발생:", error);
-
+                        if (response.status === 200) {
+                            alert("회원탈퇴가 완료되었습니다.");
+                            window.location.href = "/"; // 탈퇴 후 홈으로 리다이렉트
                         }
+                    } catch (error) {
+
+                        alert("탈퇴 처리 중 오류가 발생했습니다.");
+                        console.error("오류 발생:", error);
+
                     }
+
                 }
             }
         } catch (error) {
