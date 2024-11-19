@@ -75,7 +75,7 @@ export default function ModifyInfo() {
 
         try {
             // 현재 비밀번호 검증
-            const passwordCheckResponse = await axios.post("/api/api/passwordcheck", {
+            const passwordCheckResponse = await axios.post("/api/passwordcheck", {
                 mpw: currentPassword,
                 mno: intMno
             }, {
@@ -93,7 +93,7 @@ export default function ModifyInfo() {
                 }
 
                 // 이메일 중복 체크
-                const emailCheckResponse = await axios.post("/api/api/infoemailcheck", {
+                const emailCheckResponse = await axios.post("/api/infoemailcheck", {
                     memail: member.memail,
                     mno: intMno
                 });
@@ -106,7 +106,7 @@ export default function ModifyInfo() {
                 }
 
                 // 회원정보 수정 요청
-                const modifyResponse = await axios.post("/api/api/modifyinfo", {
+                const modifyResponse = await axios.post("/api/modifyinfo", {
                     ...member,  //수정된 회원정보
                     mpw: newPassword, // 새 비밀번호 설정
                     mno: intMno

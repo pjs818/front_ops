@@ -64,7 +64,7 @@ export default function RemoveInfo() {
         event.preventDefault();
 
         try {
-            const passwordCheckResponse = await axios.post("/api/api/passwordcheck", {
+            const passwordCheckResponse = await axios.post("/api/passwordcheck", {
                 mpw: password,
                 mno: mno
             }, {
@@ -83,7 +83,7 @@ export default function RemoveInfo() {
                     if (really) {
                         try {
                             // 탈퇴 요청을 보내는 API 호출
-                            const response = await axios.post("/api/api/deleteinfo", {
+                            const response = await axios.post("/api/deleteinfo", {
                                 mno: mno,
                                 mpw: password
                             }, {
