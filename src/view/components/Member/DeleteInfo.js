@@ -81,11 +81,10 @@ export default function RemoveInfo() {
                     try {
                         // 탈퇴 요청을 보내는 API 호출
                         const response = await axios.post("/api/deleteinfo", {
-                            mno: mno,
-                            mpw: password
+                            mno: mno  // 회원 번호
                         }, {
                             headers: {
-                                'Content-Type': 'application/json'
+                                "Content-Type": "application/json"  // 요청 본문이 JSON임을 명시
                             }
                         });
 
