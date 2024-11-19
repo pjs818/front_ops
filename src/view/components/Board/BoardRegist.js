@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import axios from "axios";
+import axios from 'axios';
 import cookie from 'react-cookies';
 import $ from 'jquery';
 
@@ -13,7 +13,6 @@ const BoardRegist = () => {
     const [append_attachList, setAppend_attachList] = useState([]);
 
     useEffect(() => {
-
         const cookie_userid = cookie.load('userid');
         const cookie_usernm = cookie.load('username');
         const cookie_password = cookie.load('userpassword');
@@ -21,7 +20,6 @@ const BoardRegist = () => {
         if (cookie_userid !== undefined) {
             const expires = new Date();
             expires.setMinutes(expires.getMinutes() + 60);
-
             cookie.save('userid', cookie_userid, { path: '/', expires });
             cookie.save('username', cookie_usernm, { path: '/', expires });
             cookie.save('userpassword', cookie_password, { path: '/', expires });
@@ -31,7 +29,6 @@ const BoardRegist = () => {
             $("#main").hide();
         }
         callSessionInfoApi();
-
     }, [append_attachList]);
 
     const callSessionInfoApi = () => {
@@ -63,7 +60,6 @@ const BoardRegist = () => {
         }
 
         if (fnValidate()) {
-
             const files = append_attachList.map(file => (file.fullName));
 
             const jsonData = {
@@ -96,68 +92,47 @@ const BoardRegist = () => {
         });
     };
 
-    const handleDrop = (event) => {
-        event.preventDefault();
-        const files = event.dataTransfer.files;
+    const handleFileChange = (e) => {
+        const files = e.target.files;
         if (files.length > 0) {
-            const file = files[0];
-            const formData = new FormData();
-            formData.append("file", file);
+            // 여러 파일을 반복해서 처리
+            Array.from(files).forEach((file) => {
+                const formData = new FormData();
+                formData.append("file", file); // 한 번에 하나씩 업로드
 
-            axios.post('/api/uploadAjax', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-                .then(response => {
-                    const fileInfo = getFileInfo(response.data);
-                    setAppend_attachList(prev => [...prev, fileInfo]); // 배열에 추가                    
+                axios.post('http://localhost:8080/uploadAjax', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 })
-                .catch(error => {
-                    console.error('Error uploading file:', error);
-                });
+                    .then(response => {
+                        const fileInfo = getFileInfo(response.data);
+                        setAppend_attachList(prev => [...prev, fileInfo]); // 배열에 파일 정보 추가
+                    })
+                    .catch(error => {
+                        console.error('Error uploading file:', error);
+                    });
+            });
         }
     };
 
-    // 파일 포맷 코드
     const getFileInfo = (data) => {
-        // data가 문자열이라 가정하고, 필요한 정보를 추출
-        const filePath = data; // 서버에서 받은 파일 경로
-        let fileName;
-        const fileType = filePath.split('.').pop().toLowerCase(); // 파일 유형 검사
-        if (fileType === "jpg" ||
-            fileType === "jpeg" ||
-            fileType === "png" ||
-            fileType === "gif"
-        ) {
-            fileName = filePath.substring(filePath.lastIndexOf('_') + 1);
-        } else {
-            fileName = filePath.substring(filePath.indexOf('_') + 1);
-        }
-        const imgSrc = `/api/displayFile?fileName=${filePath}`; // 이미지 URL 생성 함수 호출
-        const icon = getFileIcon(fileName); // 보여지는 이미지 검사
-        const Link = `/api/displayFile?fileName=${filePath}`; // 파일 다운로드 링크
-        const getLink = Link.replace(Link.substring(Link.lastIndexOf('/') + 1, Link.indexOf('_') + 1), "");
-        const fullName = filePath; // 전체 경로
-
-        console.log(fileName);
-        console.log(imgSrc);
-        console.log(icon);
-        console.log(Link);
-        console.log(getLink);
-        console.log(fullName);
+        const filePath = data;
+        const fileName = filePath.split('/').pop();
+        const imgSrc = `/api/displayFile?fileName=${filePath}`;
+        const icon = getFileIcon(fileName);
+        const Link = `/api/displayFile?fileName=${filePath}`;
+        const fullName = filePath;
 
         return {
             fileName,
             imgSrc,
             icon,
             Link,
-            getLink,
             fullName,
         };
     };
 
-    // 이미지면 원본 이미지, 기타 파일이면 기본 아이콘으로 변경
     const getFileIcon = (fileName) => {
         const extension = fileName.split('.').pop().toLowerCase();
 
@@ -166,29 +141,19 @@ const BoardRegist = () => {
             case 'jpeg':
             case 'png':
             case 'gif':
-                return null; // 이미지는 따로 처리
+                return null;
             default:
-                return '/default-icon.png'; // 기타 파일 아이콘 경로
+                return '/default-icon.png';
         }
-
-    };
-
-    const handleDragOver = (event) => {
-        event.preventDefault();
-    };
-
-    const handleFileSelect = (event) => {
-        handleDrop(event);  // 파일 선택 시 drop 핸들러 호출
     };
 
     const handleDelete = (fullName) => {
-        axios.post("/api/deleteFile", {
-            fileName: fullName
-        }).then(result => {
-            if (result.data === 'deleted') {
-                setAppend_attachList(prev => prev.filter(file => file.fullName !== fullName)); // 배열에서 삭제
-            }
-        })
+        axios.post("/api/deleteFile", { fileName: fullName })
+            .then(result => {
+                if (result.data === 'deleted') {
+                    setAppend_attachList(prev => prev.filter(file => file.fullName !== fullName));
+                }
+            })
             .catch(error => {
                 console.error('Error deleting file:', error);
             });
@@ -196,9 +161,7 @@ const BoardRegist = () => {
 
     const handleDeleteAll = () => {
         const files = append_attachList.map(file => (file.fullName));
-        axios.post(`/api/deleteAllFiles`, {
-            files: files
-        })
+        axios.post(`/api/deleteAllFiles`, { files: files })
             .then(result => {
                 if (result.data === 'deleted') {
                     window.location.href = "boardlist";
@@ -213,13 +176,24 @@ const BoardRegist = () => {
         <>
             <style>
                 {`
-                .fileDrop {
-                    width: 80%;
-                    height: 100px;
-                    border: 1px dotted gray;
-                    background-color: lightslategrey;
-                    margin: auto;
-                }
+                    .uploadedList {
+                        display: grid;
+                        grid-template-columns: repeat(6, 1fr); /* 한 줄에 6개씩 배치 */
+                        gap: 10px; /* 각 파일 사이의 간격 */
+                        list-style: none; /* 기본 list 스타일 제거 */
+                        padding: 0;
+                        margin: 0;
+                    }
+
+                    .uploadedList li {
+                        text-align: center;
+                    }
+
+                    .uploadedList li img {
+                        width: 100px;
+                        height: 100px;
+                        object-fit: cover; /* 이미지 비율 유지 */
+                    }
                 `}
             </style>
 
@@ -247,27 +221,17 @@ const BoardRegist = () => {
                                         </div>
 
                                         <div className="form-group">
-                                            File DROP Here
-                                            <div className="fileDrop"
-                                                onDrop={handleDrop}
-                                                onDragOver={handleDragOver}>
-                                            </div>
+                                            File Upload
+                                        </div>
 
-                                            {/* 파일 탐색기 버튼 */}
+                                        {/* 파일 선택 input 추가 */}
+                                        <div className="form-group">
                                             <input
                                                 type="file"
-                                                className="file-input"
-                                                onChange={handleFileSelect}
-                                                style={{ display: 'none' }} // 스타일로 숨김 처리
-                                                id="fileInput"
+                                                multiple
+                                                onChange={handleFileChange}
+                                                className="form-control"
                                             />
-                                            <button
-                                                type="button"
-                                                onClick={() => document.getElementById('fileInput').click()}  // 버튼 클릭 시 파일 탐색기 열기
-                                            >
-                                                Select File
-                                            </button>
-
                                         </div>
 
                                         <div className="attach-footer">
@@ -276,39 +240,23 @@ const BoardRegist = () => {
                                                     <li key={index}>
                                                         <span className="mailbox-attachment-icon has-img">
                                                             {file.icon ? (
-                                                                /* 이미지 파일이 아닌경우 */
                                                                 <a href={file.Link}>
                                                                     <img src={file.icon} alt="Attachment Icon" style={{ width: "100px", height: "100px" }} />
                                                                 </a>
                                                             ) : (
-                                                                <a href={file.getLink} target="blank">
+                                                                <a href={file.Link} target="blank">
                                                                     <img src={file.imgSrc} alt="Attachment" />
                                                                 </a>
                                                             )}
                                                         </span>
                                                         <div className="mailbox-attachment-info">
-                                                            {file.icon ? (
-                                                                <>
-                                                                    {/* 이미지 파일이 아닌경우 */}
-                                                                    <a href={file.Link} className="mailbox-attachment-name">{file.fileName}</a>
-                                                                    <a href={file.fullName} onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handleDelete(file.fullName);
-                                                                    }} className="btn btn-default btn-xs pull-right delbtn">
-                                                                        <i className="fa fa-fw fa-remove"><span>X</span></i>
-                                                                    </a>
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <a href={file.getLink} target="blank" className="mailbox-attachment-name">{file.fileName}</a>
-                                                                    <a href={file.fullName} onClick={(e) => {
-                                                                        e.preventDefault();
-                                                                        handleDelete(file.fullName);
-                                                                    }} className="btn btn-default btn-xs pull-right delbtn">
-                                                                        <i className="fa fa-fw fa-remove"><span>X</span></i>
-                                                                    </a>
-                                                                </>
-                                                            )}
+                                                            <a href={file.Link} className="mailbox-attachment-name">{file.fileName}</a>
+                                                            <a href="#" onClick={(e) => {
+                                                                e.preventDefault();
+                                                                handleDelete(file.fullName);
+                                                            }} className="btn btn-default btn-xs pull-right delbtn">
+                                                                <i className="fa fa-fw fa-remove"><span>X</span></i>
+                                                            </a>
                                                         </div>
                                                     </li>
                                                 ))}
@@ -327,6 +275,6 @@ const BoardRegist = () => {
             </main>
         </>
     );
-}
+};
 
 export default BoardRegist;

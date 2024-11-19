@@ -204,31 +204,28 @@ const BoardModify = () => {
         return null; // 권한이 없을 경우 렌더링하지 않음
     }
 
-    const handleDrop = (event) => {
-        event.preventDefault();
-        const files = event.dataTransfer.files;
+    const handleFileChange = (e) => {
+        const files = e.target.files;
         if (files.length > 0) {
-            const file = files[0];
-            const formData = new FormData();
-            formData.append("file", file);
+            // 여러 파일을 반복해서 처리
+            Array.from(files).forEach((file) => {
+                const formData = new FormData();
+                formData.append("file", file); // 한 번에 하나씩 업로드
 
-            axios.post('/api/uploadAjax', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-                .then(response => {
-                    const fileInfo = getFileInfo(response.data);
-                    setAppend_attachList(prev => [...prev, fileInfo]); // 배열에 추가                    
+                axios.post('http://localhost:8080/uploadAjax', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
                 })
-                .catch(error => {
-                    console.error('Error uploading file:', error);
-                });
+                    .then(response => {
+                        const fileInfo = getFileInfo(response.data);
+                        setAppend_attachList(prev => [...prev, fileInfo]); // 배열에 파일 정보 추가
+                    })
+                    .catch(error => {
+                        console.error('Error uploading file:', error);
+                    });
+            });
         }
-    };
-
-    const handleDragOver = (event) => {
-        event.preventDefault();
     };
 
     const handleDelete = (fullName) => {
@@ -255,13 +252,24 @@ const BoardModify = () => {
 
             <style>
                 {`
-                .fileDrop {
-                    width: 80%;
-                    height: 100px;
-                    border: 1px dotted gray;
-                    background-color: lightslategrey;
-                    margin: auto;
-                }
+                    .uploadedList {
+                        display: grid;
+                        grid-template-columns: repeat(6, 1fr); /* 한 줄에 6개씩 배치 */
+                        gap: 10px; /* 각 파일 사이의 간격 */
+                        list-style: none; /* 기본 list 스타일 제거 */
+                        padding: 0;
+                        margin: 0;
+                    }
+
+                    .uploadedList li {
+                        text-align: center;
+                    }
+
+                    .uploadedList li img {
+                        width: 100px;
+                        height: 100px;
+                        object-fit: cover; /* 이미지 비율 유지 */
+                    }
                 `}
             </style>
 
@@ -290,11 +298,17 @@ const BoardModify = () => {
                                     </div>
 
                                     <div className="form-group">
-                                        File DROP Here
-                                        <div className="fileDrop"
-                                            onDrop={handleDrop}
-                                            onDragOver={handleDragOver}>
-                                        </div>
+                                        File Upload
+                                    </div>
+
+                                    {/* 파일 선택 input 추가 */}
+                                    <div className="form-group">
+                                        <input
+                                            type="file"
+                                            multiple
+                                            onChange={handleFileChange}
+                                            className="form-control"
+                                        />
                                     </div>
 
                                     <div className="attach-footer">
