@@ -7,8 +7,6 @@ const BoardList = () => {
     const [boardList, setBoardList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [startPage, setStartPage] = useState(0);
-    const [endPage, setEndPage] = useState(0);
     const [keyword, setKeyword] = useState('');
     const [searchtype, setSearchtype] = useState('');
     const [isSearchMode, setIsSearchMode] = useState(false);
@@ -30,48 +28,7 @@ const BoardList = () => {
         axios.get(url)
             .then(response => {
                 const { list, pageMaker } = response.data;
-
-                if (list.length === 0) {
-                    // 검색 결과가 없을 때
-                    if (searchParams && searchParams.keyword) {
-                        // 검색 모드일 때만 알림을 띄우고, 데이터를 다시 불러오지 않음
-                        if (!isSearchMode) {
-                            setIsSearchMode(true); // 검색 모드로 설정
-                            setBoardList([]); // 리스트 비우기
-                            setTotalPages(0); // 총 페이지 0으로 설정
-                            setStartPage(0); // 시작 페이지 0으로 설정
-                            setEndPage(0); // 끝 페이지 0으로 설정
-                        }
-                        Swal.fire({
-                            title: '검색 결과가 없습니다.',
-                            text: '검색어를 수정하여 다시 시도해 보세요.',
-                            icon: 'info',
-                            confirmButtonText: '확인'
-                        });
-                    } else {
-                        // 전체 리스트가 비어있는 경우
-                        setBoardList([]); // 리스트 비우기
-                        setTotalPages(0); // 총 페이지 0으로 설정
-                        setStartPage(0); // 시작 페이지 0으로 설정
-                        setEndPage(0); // 끝 페이지 0으로 설정
-                    }
-                } else {
-                    setBoardList(list); // 정상적으로 데이터가 있다면 설정
-                    setTotalPages(pageMaker.totalPage);
-                    setStartPage(pageMaker.startPage);
-                    setEndPage(pageMaker.endPage);
-
-                    // 검색 모드 여부에 따라 페이지를 숨기고 보여주기
-                    if (searchParams) {
-                        setIsSearchMode(true);
-                        $("#cpaging").hide();
-                        $("#spaging").show();
-                    } else {
-                        setIsSearchMode(false);
-                        $("#cpaging").show();
-                        $("#spaging").hide();
-                    }
-                }
+                handleBoardListResponse(list, pageMaker, searchParams);
             })
             .catch(() => {
                 Swal.fire({
@@ -82,27 +39,71 @@ const BoardList = () => {
             });
     };
 
+    // 게시판 리스트 응답 처리
+    const handleBoardListResponse = (list, pageMaker, searchParams) => {
+        if (list.length === 0) {
+            if (searchParams?.keyword) {
+                handleSearchNoResults();
+            } else {
+                handleNoResults();
+            }
+        } else {
+            setBoardList(list);
+            setTotalPages(pageMaker.totalPage);
+
+            // 검색 모드 여부에 따라 페이지 네비게이션 보이기
+            if (searchParams) {
+                setIsSearchMode(true);
+                $("#cpaging").hide();
+                $("#spaging").show();
+            } else {
+                setIsSearchMode(false);
+                $("#cpaging").show();
+                $("#spaging").hide();
+            }
+        }
+    };
+
+    // 검색 결과가 없을 때 처리
+    const handleSearchNoResults = () => {
+        if (!isSearchMode) {
+            setIsSearchMode(true);
+            setBoardList([]);
+            setTotalPages(0);
+        }
+        Swal.fire({
+            title: '검색 결과가 없습니다.',
+            text: '검색어를 수정하여 다시 시도해 보세요.',
+            icon: 'info',
+            confirmButtonText: '확인'
+        });
+    };
+
+    // 전체 리스트가 없을 때 처리
+    const handleNoResults = () => {
+        setBoardList([]);
+        setTotalPages(0);
+    };
+
+    // 검색 처리
     const handleSearch = (e) => {
         e.preventDefault();
 
-        if (searchtype === "n") {
-            // ---전체--- 선택 시, 검색 없이 전체 게시판 목록을 불러옴
-            fetchBoardList(1);
-            return;
-        }
+        // 페이지를 1로 설정
+        setCurrentPage(1);
 
-        if (!searchtype || !keyword) {
-            Swal.fire({
-                title: '검색어와 검색 타입을 입력해주세요.',
-                icon: 'error',
-                confirmButtonText: '확인'
-            });
+        if (searchtype === "n") {
+            // 전체 목록을 불러올 때
+            setKeyword(''); // 검색어 초기화
+            setSearchtype('n'); // 검색 타입 초기화
+            fetchBoardList(1); // 전체 게시판 리스트 불러오기
             return;
         }
 
         fetchBoardList(1, { keyword, searchtype });
     };
 
+    // 페이지 클릭 처리
     const handlePageClick = (page) => {
         setCurrentPage(page);
         if (isSearchMode) {
@@ -112,6 +113,7 @@ const BoardList = () => {
         }
     };
 
+    // 페이지네이션 렌더링
     const renderPagination = () => {
         const pagesPerGroup = 5;
         const pageNumbers = [];
@@ -158,10 +160,12 @@ const BoardList = () => {
         );
     };
 
+    // 검색어 변경 처리
     const handleSearchValChange = (e) => {
         setKeyword(e.target.value);
     };
 
+    // 검색 타입 변경 처리
     const handleSearchTypeChange = (e) => {
         setSearchtype(e.target.value);
     };
