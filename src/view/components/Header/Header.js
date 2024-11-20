@@ -152,7 +152,7 @@ const Header = (props) => {
                     <span></span>
                     <span></span>
                 </button>
-                <a class="navbar-brand text-brand" href="/">Pop<span class="color-b">Pin-update</span></a>
+                <a class="navbar-brand text-brand" href="/">Pop<span class="color-b">Pin</span></a>
 
                 <div class="navbar-collapse collapse justify-content-center" id="navbarDefault">
                     <ul class="navbar-nav">
