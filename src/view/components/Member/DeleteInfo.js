@@ -90,6 +90,9 @@ export default function RemoveInfo() {
 
                         if (response.status === 200) {
                             alert("회원탈퇴가 완료되었습니다.");
+                            cookie.remove('userid', { path: '/' });
+                            cookie.remove('username', { path: '/' });
+                            cookie.remove('userpassword', { path: '/' });
                             window.location.href = "/"; // 탈퇴 후 홈으로 리다이렉트
                         }
                     } catch (error) {
